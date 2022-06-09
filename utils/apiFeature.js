@@ -1,0 +1,54 @@
+class APIFeatures {
+    constructor(query, queryString) {
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    filter() {
+        // eslint-disable-next-line node/no-unsupported-features/es-syntax
+        const queryObj = { ...this.queryString };
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        excludedFields.forEach(item => delete queryObj[item]);
+
+        // 1b) Advance querying 
+        let filterQuery = JSON.stringify(queryObj);
+        filterQuery = filterQuery.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`);
+        // console.log(JSON.parse(filterQuery))
+
+        this.query = this.query.find(JSON.parse(filterQuery));
+
+        return this;
+    }
+
+    sort() {
+        if (this.queryString.sort) {
+            const sortBy = this.queryString.sort.split(',').join(' ');
+            this.query = this.query.sort(sortBy);
+        } else {
+            this.query = this.query.sort('-createdAt');
+        };
+        return this;
+    }
+
+    limitFields() {
+        if (this.queryString.fields) {
+            const fields = this.queryString.fields.split(',').join(' ');
+            this.query = this.query.select(fields)
+        } else {
+            this.query = this.query.select('-__v')
+        }
+        return this;
+    }
+
+    paginate() {
+        if (this.queryString.page && this.queryString.limit) {
+            const skip = (this.queryString.page - 1) * this.queryString.limit;
+            this.query = this.query.skip(skip).limit(this.queryString.limit);
+        } else {
+            this.query = this.query.skip('0').limit('10');
+        }
+        return this;
+    }
+}
+
+module.exports = APIFeatures;
