@@ -1,10 +1,11 @@
 /* eslint-disable no-new */
 const path = require('path');
 const morgan = require('morgan');
-const cors = require('cors');
 // eslint-disable-next-line no-unused-vars
 const fs = require('fs');
 const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const ratelimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -45,6 +46,8 @@ app.use('/api', limiter);
 
 // body parsers
 app.use(express.json());
+app.use(cookieParser())
+app.use(express.urlencoded({limit: '10kb', extended: true}));
 
 // Data sanitization (clean up) against NoSQL query injection
 app.use(mongoSanitize());

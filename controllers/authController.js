@@ -17,10 +17,10 @@ const createSendToken = (user, statusCode, res) => {
         httpOnly: true
     };
 
-    if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-   // Remove password from the output
-   user.password = undefined;
+    // Remove password from the output
+    user.password = undefined;
 
     res.cookie('jwt', token, cookieOptions);
 
@@ -60,10 +60,10 @@ exports.login = catchAsync(async (req, res, next) => {
     if (!email || !password) {
         return next(new AppError('Please enter a valid email and password', 400));
     }
-    const user = await User.findOne({ email: email}).select('+password');
-  //  console.log(user.password)
+    const user = await User.findOne({ email: email }).select('+password');
+    //  console.log(user.password)
     const correctPassword = await user.correctPassword(password, user.password);
-   
+
     if (user && correctPassword) {
 
         createSendToken(user, 200, res);
@@ -87,6 +87,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.token) {
+        ({ token } = req.cookies);
     };
 
     if (!token) {
@@ -105,9 +107,38 @@ exports.protect = catchAsync(async (req, res, next) => {
         next(new AppError('The specified token is invalid!!', 401));
     }
     req.user = user;
+    res.locals.user = user;
     //  console.log(req.user);
     next();
 });
+
+exports.isLoggedIn = async (req, res, next) => {
+
+    if (req.cookies.token) {
+        try {
+            const { token } = req.cookies;
+
+            const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+            const user = await User.findById(decoded.id);
+            if (!user._id) {
+                next(new AppError('The specified token is invalid', 401));
+            }
+
+            //checking if user has changed password after JWT was generated
+            if (await user.changedPasswordAfter(decoded.iat)) {
+                next(new AppError('The specified token is invalid!!', 401));
+            }
+            // if(!user) next()
+            res.locals.user = user;
+        } catch (err) {
+            console.log(err);
+            next()
+        }
+       
+    };
+    next();
+};
 
 exports.restrictTo = (...roles) => (req, res, next) => {
 
@@ -171,7 +202,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-    const user = await User.findById( req.user.id ).select('+password');
+    const user = await User.findById(req.user.id).select('+password');
 
     const correctPassword = await user.correctPassword(req.body.oldPassword, user.password);
 
