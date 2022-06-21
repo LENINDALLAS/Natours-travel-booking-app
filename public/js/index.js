@@ -2,11 +2,14 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import {login, logout} from './login';
+import { updateSettings } from './updateSettings';
+import { showAlert } from './alert';
 
 const openLayers = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutButton = document.querySelector('.nav__el--logout');
-
+const updateDataForm = document.querySelector('.form-user-data');
+const updatePasswordForm = document.querySelector('.form-user-password');
 
 if(openLayers) {
     const locations = JSON.parse(openLayers.dataset.locations);
@@ -24,3 +27,44 @@ loginForm.addEventListener('submit', e => {
 }
 
 if(logOutButton) logOutButton.addEventListener('click', logout);
+
+if(updateDataForm) {
+    updateDataForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const data = {
+            name,
+            email
+        };
+        updateSettings(data, 'data');
+    });
+};
+
+if (updatePasswordForm) {
+    updatePasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        document.getElementById('btn-save-password').textContent = 'Updating ...'
+        const oldPassword = document.getElementById('password-current').value;
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password-confirm').value;
+        if (!oldPassword || !password || !passwordConfirm) {
+            showAlert('error', `Password field is required`);
+            return;
+        } else if (password !== passwordConfirm ) {
+            showAlert('error', `New password and Confirm password do not match`);
+            return;
+        }
+        const data = {
+            oldPassword,
+            password,
+            passwordConfirm
+        };
+        await updateSettings(data, 'password');
+
+        document.getElementById('btn-save-password').textContent = 'Save Password'
+        document.getElementById('password-current').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('password-confirm').value = '';
+    });
+}

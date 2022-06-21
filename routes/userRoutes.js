@@ -1,7 +1,9 @@
 const express = require('express');
+const multer = require('multer');
 const { getAllUsers, createUser, getUser, updateUser, deleteUser, updateMe, deleteMe, getMe } = require('../controllers/userController');
 const { signup, login, protect, restrictTo, forgotPassword, resetPassword, updatePassword } = require('../controllers/authController');
 
+const upload = multer({dest: 'public/img/users'})
 const router = express.Router();
 
 // open routes no authentication required
@@ -19,7 +21,7 @@ router.use(protect);
 router.patch('/update-password', updatePassword);
 
 // update user data 
-router.patch('/update-me', updateMe);
+router.patch('/update-me', upload.single('photo'), updateMe);
 // delete user by setting active state to false
 router.delete('/delete-me', deleteMe);
 
