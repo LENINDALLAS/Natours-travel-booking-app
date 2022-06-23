@@ -4,7 +4,7 @@ import { showAlert } from './alert';
 export const updateSettings = async (data, type) => {
 try {
    // console.log(email, name)
-    console.log(document.cookie.split('=')[1])
+   // console.log(document.cookie.split('=')[1])
     // axios.defaults.withCredentials = true
     const res = await axios({
         method: 'PATCH',

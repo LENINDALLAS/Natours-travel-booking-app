@@ -24,7 +24,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     }
     //const reviews = await Review.find({tour: tour._id});
     // tour.reviews = reviews;
-     console.log(tour);
+    //  console.log(tour);
     
     res.status(200).render('tour', { title: `${tour.name} Tour`, tour });
 });
