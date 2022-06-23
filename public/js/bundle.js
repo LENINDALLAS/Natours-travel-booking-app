@@ -11297,7 +11297,7 @@ var updateSettings = /*#__PURE__*/function () {
 
             if (res.data.status === 'success') {
               (0, _alert.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully"));
-              document.cookie = "token=".concat(res.data.token);
+              if (res.data.token) document.cookie = "token=".concat(res.data.token);
             }
 
             _context.next = 10;

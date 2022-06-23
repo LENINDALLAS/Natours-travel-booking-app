@@ -16,7 +16,7 @@ try {
     });
     if(res.data.status === 'success') {
         showAlert('success', `${type.toUpperCase()} updated successfully`);
-        document.cookie = `token=${res.data.token}`;
+       if(res.data.token) document.cookie = `token=${res.data.token}`;
     }
 } catch(error) {
     showAlert('error', error.response.data.message);
