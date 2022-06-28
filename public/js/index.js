@@ -4,6 +4,8 @@ import { displayMap } from './mapbox';
 import {login, logout} from './login';
 import { updateSettings } from './updateSettings';
 import { showAlert } from './alert';
+var FormData = require('form-data');
+
 
 const openLayers = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
@@ -32,13 +34,15 @@ if(updateDataForm) {
     updateDataForm.addEventListener('submit', e => {
         e.preventDefault();
         const form = new FormData();
-        form.append('name', document.getElementById('name').value);
-        form.append('email', document.getElementById('email').value);
-        form.append('photo', document.getElementById('photo').files[0]);
-        const data = {
-          form
-        };
-        updateSettings(data, 'data');
+         form.append('name', document.getElementById('name').value);
+         form.append('email', document.getElementById('email').value);
+         form.append('photo', document.getElementById('photo').files[0]);
+      //  const name = document.getElementById('name').value
+     
+        // const data = {
+        //   form
+        // };
+        updateSettings(form, 'data');
     });
 };
 

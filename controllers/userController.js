@@ -19,6 +19,7 @@ const { deleteOne, updateOne, createOne, getOne, getAll } = require('./handlerFa
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
+    
     if (file.mimetype.startsWith('image')) {
         cb(null, true)
     } else {
@@ -73,8 +74,9 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-    // console.log(req.file);
+    // console.log(req.headers);
     // console.log(req.body);
+    // console.log(req.file);
 
     if (req.body.password || req.body.passwordConfirm) {
         return next(new AppError('Please use the update password option to update your password', 400));

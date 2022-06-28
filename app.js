@@ -6,6 +6,7 @@ const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+// const fileupload = require("express-fileupload");
 const ratelimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -45,9 +46,10 @@ const limiter = ratelimit({
 app.use('/api', limiter);
 
 // body parsers
+// app.use(fileupload());
 app.use(express.json());
-app.use(cookieParser())
 app.use(express.urlencoded({limit: '10kb', extended: true}));
+app.use(cookieParser())
 
 // Data sanitization (clean up) against NoSQL query injection
 app.use(mongoSanitize());
@@ -61,6 +63,7 @@ app.use(hpp({ whitelist: ['duration', 'ratingsQuantity', 'ratingsAverage', 'maxG
 
 //adding time to req for testing purposes
 app.use((req, res, next) => {
+    // console.log(req)
     req.requestTime = new Date().toISOString();
     next();
 });
