@@ -31,7 +31,7 @@ exports.uploadTourImages = upload.fields([
 
 
 exports.resizeTourImages = (req, res, next) => {
-    console.log(req.files) 
+    console.log(req.files ) 
     next();
 };
 // exports.resizeUserPhoto = (req, res, next) => {
