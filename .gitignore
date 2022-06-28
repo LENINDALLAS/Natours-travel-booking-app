@@ -4,3 +4,4 @@
 /.eslintrc.json
 /.prettierrc
 /package-lock.json
+/.cache
