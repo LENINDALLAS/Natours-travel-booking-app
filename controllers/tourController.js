@@ -1,6 +1,6 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
 const multer = require('multer');
-// const sharp = require('sharp');
+const sharp = require('sharp');
 const Tour = require('../models/tourModels');
 const catchAsync = require('../utils/catchAsync');
 const { deleteOne, updateOne, createOne, getOne, getAll } = require('./handlerFactory');
@@ -30,10 +30,30 @@ exports.uploadTourImages = upload.fields([
 ]);
 
 
-exports.resizeTourImages = (req, res, next) => {
-    console.log(req.files ) 
+exports.resizeTourImages = catchAsync(async(req, res, next) => {
+if(!req.files.imageCover || !req.files.images) return next();
+
+    req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+    await sharp(req.files.imageCover[0].buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${req.body.imageCover}`);
+
+    await Promise.all(req.files.images.map( async (image, idx) => {
+        req.body.images = [];
+        const filename = `tour-${req.params.id}-${Date.now()}-${idx + 1}.jpeg`
+
+        await sharp(image.buffer)
+            .resize(2000, 1333)
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toFile(`public/img/tours/${filename}`);
+        req.body.images.push(filename);
+    }));
     next();
-};
+});
 // exports.resizeUserPhoto = (req, res, next) => {
 //     if (!req.file) return next();
 
