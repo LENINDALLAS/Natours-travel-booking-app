@@ -6,7 +6,7 @@ const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM, NODE_ENV } =
 
 module.exports = class {
     constructor(user, url) {
-        this.to = user.to;
+        this.to = user.email;
         this.firstName = user.name.split(' ')[0];
         this.url = url;
         this.from = `Lenin Dallas L <${EMAIL_FROM}>`
@@ -31,7 +31,8 @@ module.exports = class {
 
    async send(template, subject) {
         //prepare html template
-        const html = pug.render(`${__dirname}/../views/email/${template}.pug`, {
+    //    console.log(`${__dirname}/../views/email/${template}.pug`);
+        const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
             firstName: this.firstName,
             url: this.url,
             subject
