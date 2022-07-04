@@ -47,7 +47,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const url = `${req.protocol}://${req.get('host')}/me`;
     await new Email(newUser, url).sendWelcome();
-    
+
     createSendToken(newUser, 201, res);
 
     // const token = signToken(newUser._id)
@@ -87,7 +87,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-// console.log(req.cookies);
+    // console.log(req.cookies);
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
@@ -138,7 +138,7 @@ exports.isLoggedIn = async (req, res, next) => {
             console.log(err);
             next()
         }
-       
+
     };
     next();
 };
@@ -161,16 +161,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/reset-password/${resetToken}`;
-    const message = `submit your reset password to this link: ${resetUrl} to reset your password,\n if not requested by you please ignore`;
-
     try {
-        // await Email({
-        //     email: user.email,
-        //     subject: 'you password reset token (valid for 10 min )',
-        //     message
-        // });
-console.log(message);
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/reset-password/${resetToken}`;
+        await new Email(user, resetUrl).sendResetPassword();
         res.status(200).json({ status: 'success', message: 'your reset password has been sent to your mail, please check your inbox' });
     } catch (error) {
         user.passwordResetToken = undefined;
