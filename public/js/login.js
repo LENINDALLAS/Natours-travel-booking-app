@@ -13,6 +13,7 @@ export const login = async (email, password) => {
         if (res.data.status === 'success') {
             showAlert('success', 'Logged in successfully');
             document.cookie = `token=${res.data.token}`;
+            console.log('entered')
             window.setTimeout(() => {
                 location.assign('/');
             }, 1500);

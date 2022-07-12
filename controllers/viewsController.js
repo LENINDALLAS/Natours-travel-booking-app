@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModels');
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 const AppError = require('../utils/appError');
 //const Review = require('models/reviewModel');
 
@@ -11,6 +12,15 @@ exports.getOverview = catchAsync(async (req, res, next) => {
     // console.log(tours)
 
     res.status(200).render('overview', { title: 'All tours', tours })
+});
+
+exports.getBookings = catchAsync(async (req, res, next) => {
+    const allTours = await Booking.find({ user: req.user.id }).populate('tour');
+    const tours = allTours.map(trip => trip.tour);
+
+    if (!tours) return next(new AppError('Tour not found', 404));
+
+    res.status(200).render('overview', { title: 'Bookings', tours })
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
@@ -25,7 +35,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     //const reviews = await Review.find({tour: tour._id});
     // tour.reviews = reviews;
     //  console.log(tour);
-    
+
     res.status(200).render('tour', { title: `${tour.name} Tour`, tour });
 });
 

@@ -10,7 +10,7 @@ export const updateSettings = async (data, type) => {
            data,
             headers: {
                 // "Content-Type": "multipart/form-data",
-                Authorization: 'Bearer ' + document.cookie.split('=')[1]
+                Authorization: 'Bearer ' + document.cookie.split('token=')[1]
             }
         });
         if (res.data.status === 'success') {

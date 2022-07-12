@@ -1,10 +1,4 @@
-/* eslint-disable no-undef */
-
-// eslint-disable-next-line no-undef
-//- const pop = document.getElementsByClassName('popup')
-//- var popup = new ol.Overlay({
-//- element: pop
-//- });
+/* eslint-disable  */
 
 export const displayMap = (locations) => {
     const map = new ol.Map({
