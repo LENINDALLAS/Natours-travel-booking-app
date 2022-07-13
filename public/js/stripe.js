@@ -7,7 +7,7 @@ export const bookTour = async (tourId ) => {
     try {
         const session = await axios({
             method: 'GET',
-            url: `http://localhost:3000/api/v1/bookings/${tourId}`,
+            url: `/api/v1/bookings/${tourId}`,
             headers: {
                 // "Content-Type": "multipart/form-data",
                 Authorization: 'Bearer ' + document.cookie.split('token=')[1]

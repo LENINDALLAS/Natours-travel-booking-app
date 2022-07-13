@@ -12,6 +12,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 // const helmet = require('helmet');
 const hpp = require('hpp');
+const compression = require('compression');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
@@ -61,6 +62,8 @@ app.use(xss());
 // To protect from parameter pollution in the query string
 // Whitelisting avoids checking for the key in the query string
 app.use(hpp({ whitelist: ['duration', 'ratingsQuantity', 'ratingsAverage', 'maxGroupSize', 'difficulty', 'price'] }));
+
+app.use(compression());
 
 //adding time to req for testing purposes
 app.use((req, res, next) => {
