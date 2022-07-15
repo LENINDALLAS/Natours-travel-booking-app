@@ -8,10 +8,8 @@ const Tour = require('./models/tourModels');
 const User = require('./models/userModel');
 const Review = require('./models/reviewModel');
 
-const DB = process.env.MONGODB_URL.replace('<PASSWORD>', process.env.PASSWORD);
-
+const DB = process.env.MONGODB_URL.replace(/'/g, '').replace('<PASSWORD>', process.env.PASSWORD);
 mongoose.connect(DB, {});
-
 mongoose.connection.once('open', () => {
     console.log("Database connection successfully established...");
 });
