@@ -22,6 +22,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
+app.enable('trust proxy')
 app.use(cors());
 
 app.set('view engine', 'pug');
