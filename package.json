@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
+    "start:dev": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production & nodemon server.js",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
     "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
@@ -48,7 +49,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.19",
     "parcel-bundler": "^1.12.5",
     "prettier": "^2.5.1"
   },
