@@ -56,19 +56,23 @@ exports.getCheckoutSession = catchAsync( async (req, res, next) => {
 // });
 
 const createBookingCheckout = async (session) => {
-   console.log(JSON.stringify(session))
-    const tour = session.client_reference_id;
-    const user = (await User.findOne({email: session.customer_email})).id;
-    const price = session.line_items[0].amount / 100;
+    try {
+        const tour = session.client_reference_id;
+        const user = (await User.findOne({ email: session.customer_email })).id;
+        const price = session.amount_subtotal / 100;
 
-    if ( tour && user && price) {
-        const booking = new Booking({
-            tour,
-            user,
-            price,
-        });
-        await booking.save();
+        if (tour && user && price) {
+            const booking = new Booking({
+                tour,
+                user,
+                price,
+            });
+            await booking.save();
+        }
+    } catch(error) {
+        console.error("Error saving payment to database:" , error)
     }
+    
 //    res.redirect(req.origin.split('?')[0]);
 };
 
