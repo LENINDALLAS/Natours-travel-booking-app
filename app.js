@@ -50,7 +50,7 @@ const limiter = ratelimit({
 
 app.use('/api', limiter);
 
-app.post("/webhook-checkout", app.raw({type: "application/json"}), bookingController.webhookCheckout);  // Does not need, normal body parser as stripe webhook needs data in the raw form, express raw is used
+app.post("/webhook-checkout", express.raw({type: "application/json"}), bookingController.webhookCheckout);  // Does not need, normal body parser as stripe webhook needs data in the raw form, express raw is used
 
 // body parsers
 // app.use(fileupload());
