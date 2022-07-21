@@ -84,3 +84,7 @@ if (bookButton) {
     })
 
 }
+
+let alertMessage = document.querySelector("body").dataset("alert");
+if (alertMessage) showAlert("success", alertMessage, 5);
+alertMessage = "";

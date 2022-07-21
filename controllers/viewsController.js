@@ -59,3 +59,11 @@ exports.updateUserData = async (req, res) => {
         });
     res.status(200).render('account', { title: 'Account', user: updatedUser });
 };
+
+exports.alerts = (req, res, next) => {
+    const { alert } = req.query;
+    if(alert === "bookings") {
+        res.locals.alert = "Your booking is successfull, Enjoy your tour"
+    }
+    next()
+}

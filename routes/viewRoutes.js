@@ -1,10 +1,12 @@
 const express = require('express');
 const { protect, isLoggedIn } = require('../controllers/authController');
 const { getOverview, getTour, getLoginForm, getAccount, updateUserData, getBookings } = require('../controllers/viewsController');
+const { alerts } = require('../controllers/reviewController');
 // const { createBookingCheckout } = require('../controllers/bookingController');
 
 const router = express.Router();
 
+router.use(alerts);
 
 router.route('/').get( isLoggedIn, getOverview);
 router.route('/tours/:slug').get(isLoggedIn, getTour);
