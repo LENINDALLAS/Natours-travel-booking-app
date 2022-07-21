@@ -62,7 +62,7 @@ exports.updateUserData = async (req, res) => {
 
 exports.alerts = (req, res, next) => {
     const { alert } = req.query;
-    if(alert === "bookings") {
+    if(alert === "booking") {
         res.locals.alert = "Your booking is successfull, Enjoy your tour"
     }
     next()
